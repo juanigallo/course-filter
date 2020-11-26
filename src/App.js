@@ -1,5 +1,7 @@
 import "./style.scss";
 import { useState } from "react";
+import Search from "./components/Search";
+import Courses from "./components/Courses";
 
 function App() {
   const courses = [
@@ -23,15 +25,15 @@ function App() {
 
   const [filteredCourses, setFilteredCourses] = useState(courses);
 
-  function handleChange(e) {
-    const { value } = e.target;
+  function handleChange(inputValue) {
+    // const { value } = e.target; //<-- Esto potencialmente sea un problema
 
-    if (value == "") {
+    if (inputValue == "") {
       setFilteredCourses(courses);
     }
 
     const filtered = courses.filter((course) => {
-      return course.name.toLowerCase().includes(value.toLowerCase());
+      return course.name.toLowerCase().includes(inputValue.toLowerCase());
     });
 
     setFilteredCourses(filtered);
@@ -39,29 +41,9 @@ function App() {
 
   return (
     <div className="App">
-      <div className="inputContainer">
-        <input
-          type="text"
-          placeholder="Empeza a tipear el nombre de un curso"
-          onChange={handleChange}
-        />
-      </div>
+      <Search handleCallback={handleChange} />
       <div className="cardsContainer">
-        {filteredCourses.map((course, key) => {
-          return (
-            <div className="cardContainer" key={key}>
-              <div
-                style={{
-                  backgroundColor: course.color,
-                  backgroundImage: `url(${course.img})`
-                }}
-                className="imgContainer"
-              ></div>
-              <h1 className="title">{course.name}</h1>
-              <p className="desc">{course.desc}</p>
-            </div>
-          );
-        })}
+        <Courses data={filteredCourses} />
       </div>
     </div>
   );
